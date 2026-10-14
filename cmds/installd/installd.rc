@@ -3,6 +3,10 @@ service installd /system/bin/installd
     class main
     user root
     capabilities CHOWN DAC_OVERRIDE DAC_READ_SEARCH FOWNER FSETID KILL SETGID SETUID SYS_ADMIN
+    # The user unlock waits on createAppDataBatched (restorecon of every package's CE
+    # dir). With the default cgroups the scheduler keeps installd on the little cores
+    # while apps start, which roughly doubles the unlock on sunfish.
+    task_profiles ProcessCapacityMax MaxPerformance
 
 on early-boot
     mkdir /config/sdcardfs/extensions/1055
